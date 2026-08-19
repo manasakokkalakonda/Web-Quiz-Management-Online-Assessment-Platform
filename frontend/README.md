@@ -1,3 +1,4 @@
+<<<<<<< HEAD
  # 🌐 Frontend — Quiz Management & Assessment Platform
 
 The client-side interface for the Quiz Management & Online Assessment Platform built with **React.js** and **Tailwind CSS**. It provides responsive dashboards and real-time quiz workflows for both Students and Administrators.
@@ -40,3 +41,7 @@ The client-side interface for the Quiz Management & Online Assessment Platform b
 1. **Navigate to the frontend directory:**
    ```bash
    cd frontend
+=======
+# Web-Quiz-Management-Online-Assessment-Platform
+A full-stack online assessment and quiz management platform with real-time timers, automatic scoring, and admin/student dashboards.
+>>>>>>> f23d924bd511de3f88da17e3b6fdb2f09d2ee52b
