@@ -17,4 +17,4 @@ An interactive web platform built for conducting online quizzes, tracking studen
 ### Backend Setup
 1. Open terminal and navigate to backend:
    ```bash
-   cd backend
+   cd backend 
