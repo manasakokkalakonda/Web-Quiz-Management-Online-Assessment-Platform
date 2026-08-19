@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AssessHub — Online Assessment Platform</title>
-  <script type="module" src="/src/main.jsx"></script>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -199,15 +198,8 @@
   </style>
 </head>
 <body>
-
-  <nav id="appNav" class="hidden">
-    <div class="brand">⚡ AssessHub Portal</div>
-    <div class="user-info">
-      <span id="userNameDisplay" style="font-weight: 600; font-size: 0.95rem;"></span>
-      <span id="userRoleBadge" class="badge">Student</span>
-      <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
-    </div>
-  </nav>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 
   <div class="container">
 
