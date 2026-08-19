@@ -20,7 +20,7 @@ A full-stack online assessment engine built with **React**, **Tailwind CSS**, an
 
 ## ⚡ Quick Start
 
-### 1. Clone & Setup Backend
+### 1. Setup Backend
 ```powershell
 cd backend
 npm install
