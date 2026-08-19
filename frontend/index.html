@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AssessHub — Online Assessment Platform</title>
+  <script type="module" src="/src/main.jsx"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --radius: 16px;
+      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    body { 
+      background: radial-gradient(circle at top right, #1e1b4b, #0f172a 60%);
+      color: var(--text-main); 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+    }
+
+    nav { 
+      background: rgba(15, 23, 42, 0.85); 
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); 
+      padding: 1.1rem 2rem; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand { 
+      font-size: 1.3rem; 
+      font-weight: 800; 
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+    }
+    .user-info { display: flex; align-items: center; gap: 1rem; }
+    .badge { 
+      background: rgba(99, 102, 241, 0.2); 
+      color: #a5b4fc; 
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      font-size: 0.75rem; 
+      font-weight: 700; 
+      padding: 0.25rem 0.75rem; 
+      border-radius: 999px; 
+      text-transform: uppercase; 
+    }
+
+    .container { max-width: 1080px; margin: 2rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
+    .hidden { display: none !important; }
+    .grid { display: grid; gap: 1.5rem; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+    .card { 
+      background: var(--card-bg); 
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius); 
+      padding: 1.75rem; 
+      border: 1px solid var(--card-border); 
+      box-shadow: var(--shadow); 
+      margin-bottom: 1.5rem; 
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #ffffff; }
+
+    .stat-card { 
+      text-align: center; 
+      padding: 1.5rem; 
+      border-radius: var(--radius); 
+      background: rgba(255, 255, 255, 0.03); 
+      border: 1px solid var(--card-border);
+    }
+    .stat-val { font-size: 2rem; font-weight: 800; color: #818cf8; margin-top: 0.3rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted); }
+    input, select { 
+      width: 100%; 
+      padding: 0.85rem 1rem; 
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border); 
+      border-radius: 10px; 
+      font-size: 0.95rem; 
+      color: #fff;
+    }
+    input:focus, select:focus { outline: none; border-color: var(--primary); }
+
+    .btn { 
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
+      color: white; 
+      border: none; 
+      padding: 0.8rem 1.4rem; 
+      border-radius: 10px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      font-size: 0.95rem; 
+    }
+    .btn:hover { transform: translateY(-2px); opacity: 0.95; }
+    .btn-secondary { 
+      background: rgba(255, 255, 255, 0.08); 
+      color: var(--text-main); 
+      border: 1px solid var(--card-border); 
+    }
+    .btn-full { width: 100%; }
+
+    .auth-wrapper { max-width: 440px; margin: 3rem auto; }
+    .auth-toggle { text-align: center; margin-top: 1.25rem; font-size: 0.9rem; color: var(--text-muted); }
+    .auth-toggle a { color: #818cf8; font-weight: 600; cursor: pointer; text-decoration: none; }
+
+    .q-image {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+      border: 1px solid var(--card-border);
+    }
+    .timer-badge { 
+      background: rgba(245, 158, 11, 0.15); 
+      color: #fbbf24; 
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.5rem 1rem; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      font-size: 0.9rem; 
+    }
+    .option-item { 
+      display: flex; 
+      align-items: center; 
+      padding: 1rem 1.25rem; 
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border); 
+      border-radius: 10px; 
+      margin-bottom: 0.75rem; 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    .option-item:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+    .option-item input { width: auto; margin-right: 1rem; accent-color: var(--primary); }
+
+    .quiz-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .quiz-card-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+    th { padding: 0.85rem 1rem; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--card-border); }
+    td { padding: 1rem; border-bottom: 1px solid var(--card-border); }
+
+    .review-box {
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--card-border);
+    }
+    .review-correct { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
+    .review-incorrect { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); }
+
+    .status-msg { font-size: 0.9rem; text-align: center; margin-top: 1rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <nav id="appNav" class="hidden">
+    <div class="brand">⚡ AssessHub Portal</div>
+    <div class="user-info">
+      <span id="userNameDisplay" style="font-weight: 600; font-size: 0.95rem;"></span>
+      <span id="userRoleBadge" class="badge">Student</span>
+      <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- 1. AUTHENTICATION MODULE -->
+    <div id="authSection" class="auth-wrapper">
+      <div class="card">
+        <h2 id="authTitle" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.6rem; font-weight: 800;">Sign In</h2>
+        
+        <form id="authForm" onsubmit="event.preventDefault(); handleAuth();">
+          <div id="nameGroup" class="form-group hidden">
+            <label>Full Name</label>
+            <input type="text" id="authName" placeholder="Jane Doe" />
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="authEmail" placeholder="user@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="authPassword" placeholder="••••••••" required />
+          </div>
+          <div class="form-group">
+            <label>Login As</label>
+            <select id="authRole">
+              <option value="student">Student</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <button type="submit" id="authSubmitBtn" class="btn btn-full">Sign In</button>
+        </form>
+
+        <div class="status-msg" id="authStatus"></div>
+        <div class="auth-toggle">
+          <span id="authToggleText">Need an account?</span>
+          <a onclick="toggleAuthMode()" id="authToggleLink">Register here</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. STUDENT DASHBOARD MODULE -->
+    <div id="studentDashboard" class="hidden">
+      <div class="card grid grid-4">
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Completed</span>
+          <div class="stat-val" id="statCompleted">0</div>
+        </div>
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Average Score</span>
+          <div class="stat-val" id="statAvg">0%</div>
+        </div>
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Leaderboard Rank</span>
+          <div class="stat-val" id="statRank">#1</div>
+        </div>
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Pass Rate</span>
+          <div class="stat-val" id="statPassRate">0%</div>
+        </div>
+      </div>
+
+      <!-- Quiz Listing -->
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom: 1.25rem;">Available Assessments</h3>
+        <div id="quizGrid" class="grid grid-3"></div>
+      </div>
+
+      <!-- Attempt History -->
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom: 1.25rem;">Your Attempt History</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="attemptHistoryBody">
+            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No assessments completed yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Leaderboards with Category Filter -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Leaderboard</h3>
+          <select id="leaderboardCategoryFilter" style="width: auto; padding: 0.4rem 0.8rem;" onchange="renderLeaderboard()">
+            <option value="overall">Overall Leaderboard</option>
+            <option value="webdev">Web Development</option>
+            <option value="python">Python Programming</option>
+            <option value="general">General Knowledge</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Student</th>
+              <th>Category</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- QUIZ DETAILS OVERLAY / MODAL -->
+    <div id="quizDetailsSection" class="hidden">
+      <div class="card" style="max-width: 600px; margin: 2rem auto;">
+        <img id="detailImg" src="" style="width:100%; height:180px; object-fit:cover; border-radius:12px; margin-bottom:1rem;" />
+        <h2 id="detailTitle" style="margin-bottom: 0.5rem;">Quiz Details</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;" id="detailDescription">Review test parameters before launching.</p>
+        
+        <div style="margin-bottom: 1.5rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border: 1px solid var(--card-border);">
+          <p style="margin-bottom: 0.5rem;"><strong>Questions:</strong> <span id="detailCount">10</span> questions</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Duration:</strong> <span id="detailDuration">10</span> Minutes</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Passing Score:</strong> 60%</p>
+          <p><strong>Instructions:</strong> Answers submit automatically when time expires. Avoid switching tabs.</p>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn btn-secondary btn-full" onclick="cancelQuizDetails()">Back</button>
+          <button class="btn btn-full" onclick="confirmStartQuiz()">Begin Assessment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LIVE QUIZ ENGINE MODULE -->
+    <div id="quizEngineSection" class="hidden">
+      <div class="card card-header">
+        <div>
+          <h2 id="activeQuizTitle" style="font-size: 1.3rem;">Assessment</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Question <span id="currentQIndex">1</span> of <span id="totalQCount">10</span></span>
+        </div>
+        <div class="timer-badge">⏱️ Time Left: <span id="timerDisplay">10:00</span></div>
+      </div>
+
+      <div class="card">
+        <img id="questionImage" class="q-image" src="" alt="Question Illustration" />
+        <h3 id="questionText" style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.5;">Question text...</h3>
+        <div id="optionsContainer"></div>
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button class="btn btn-secondary" onclick="prevQuestion()">Previous</button>
+          <button class="btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. RESULTS & EXPLANATIONS MODULE -->
+    <div id="resultsSection" class="hidden">
+      <div class="card" style="text-align: center;">
+        <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem;">Quiz Performance Report</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Score breakdown & detailed answer key review.</p>
+        
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
+          <div class="stat-card" style="min-width: 150px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Your Score</span>
+            <div class="stat-val" id="finalScoreText">0%</div>
+          </div>
+          <div class="stat-card" style="min-width: 150px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Result</span>
+            <div class="stat-val" id="passFailBadge" style="color: var(--success);">PASS</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom: 1.25rem;">Detailed Answer Key & Explanations</h3>
+        <div id="reviewContainer"></div>
+        <button class="btn btn-full" style="margin-top: 1rem;" onclick="returnToDashboard()">Return to Dashboard</button>
+      </div>
+    </div>
+
+    <!-- 5. ADMIN DASHBOARD & ANALYTICS -->
+    <div id="adminDashboard" class="hidden">
+      <div class="card grid grid-4">
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Total Quizzes</span>
+          <div class="stat-val">3 Categories</div>
+        </div>
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Total Candidates</span>
+          <div class="stat-val">184</div>
+        </div>
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Overall Pass Rate</span>
+          <div class="stat-val" style="color: var(--success);">91%</div>
+        </div>
+        <div class="stat-card">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Active Sessions</span>
+          <div class="stat-val">24</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Quiz & Question Management Engine</h2>
+        </div>
+        <form onsubmit="event.preventDefault(); alert('New Quiz successfully published!');">
+          <div class="form-group">
+            <label>Quiz Title</label>
+            <input type="text" placeholder="e.g., Advanced React & TypeScript" required />
+          </div>
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label>Time Limit (Minutes)</label>
+              <input type="number" value="10" required />
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select>
+                <option>Web Development</option>
+                <option>Python Programming</option>
+                <option>General Knowledge</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn">Publish New Quiz</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    let isRegisterMode = false;
+    let timerInterval = null;
+    let attemptLogs = [];
+
+    const quizDatabase = {
+      webdev: {
+        title: "Fullstack Web Development",
+        duration: 10,
+        img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+        questions: [
+          { q: "1. Which HTML5 element is specifically designed for container navigation links?", img: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=800&q=80", options: ["&lt;nav&gt;", "&lt;header&gt;", "&lt;aside&gt;", "&lt;section&gt;"], ans: 0, explanation: "The <nav> element represents a section of a page intended for navigation links." },
+          { q: "2. In CSS Flexbox layout, which property aligns items along the primary axis?", img: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80", options: ["align-items", "justify-content", "align-content", "flex-wrap"], ans: 1, explanation: "justify-content defines how space is distributed between items along the primary axis." },
+          { q: "3. Which JavaScript keyword declares a block-scoped variable that cannot be reassigned?", img: "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?auto=format&fit=crop&w=800&q=80", options: ["var", "let", "const", "static"], ans: 2, explanation: "const creates block-scoped variables that cannot be reassigned." },
+          { q: "4. What HTTP status code represents 'Unauthorized' access?", img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80", options: ["200 OK", "401 Unauthorized", "404 Not Found", "500 Server Error"], ans: 1, explanation: "HTTP 401 Unauthorized indicates invalid or missing authentication." },
+          { q: "5. In RESTful API design, which method completely replaces an existing resource?", img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80", options: ["GET", "POST", "PUT", "DELETE"], ans: 2, explanation: "HTTP PUT is used to replace or update an entire existing target resource." },
+          { q: "6. Which tool is standard for client-side JavaScript bundle management in modern React apps?", img: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80", options: ["Vite", "npm", "Docker", "Nginx"], ans: 0, explanation: "Vite is a modern frontend build tool." },
+          { q: "7. In CSS Grid, what unit represents a fraction of the available space?", img: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80", options: ["px", "rem", "fr", "%"], ans: 2, explanation: "The 'fr' unit represents a fraction of free grid space." },
+          { q: "8. What React hook is designed to manage side effects in functional components?", img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80", options: ["useState", "useEffect", "useContext", "useReducer"], ans: 1, explanation: "useEffect lets you perform side effects in functional components." },
+          { q: "9. Which database query language is used natively with relational SQL databases?", img: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80", options: ["NoSQL", "SQL", "GraphQL", "MongoDB"], ans: 1, explanation: "SQL is the standard query language for relational databases." },
+          { q: "10. What does JWT stand for in web application authorization?", img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=80", options: ["Java Web Token", "JSON Web Token", "JavaScript Web Tool", "Joint Web Technology"], ans: 1, explanation: "JSON Web Token (JWT) is an open standard for passing secure tokens." }
+        ]
+      },
+      python: {
+        title: "Python Core & Object-Oriented Programming",
+        duration: 10,
+        img: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=800&q=80",
+        questions: [
+          { q: "1. Which Python data structure is immutable and enclosed in parentheses ()?", img: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=800&q=80", options: ["List", "Dictionary", "Set", "Tuple"], ans: 3, explanation: "Tuples are immutable sequence types defined by parentheses." },
+          { q: "2. What is the correct method name for defining a class constructor in Python?", img: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80", options: ["def construct(self):", "def __init__(self):", "function __main__():", "def new(self):"], ans: 1, explanation: "__init__ is Python's initializer method." },
+          { q: "3. Which keyword handles exceptions raised in a try block?", img: "https://images.unsplash.com/photo-1555066931-bf19f8fd1085?auto=format&fit=crop&w=800&q=80", options: ["catch", "except", "error", "finally"], ans: 1, explanation: "The except keyword handles exceptions in Python." },
+          { 
+            q: "4. What output does print(type([])) produce in Python?", 
+            img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80", 
+            options: ["&lt;class 'list'&gt;", "&lt;class 'array'&gt;", "&lt;class 'tuple'&gt;", "&lt;class 'dict'&gt;"], 
+            ans: 0, 
+            explanation: "Square brackets [] instantiate a list." 
+          },
+          { q: "5. Which standard Python library provides mathematical functions like sqrt() and ceil()?", img: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80", options: ["sys", "os", "math", "random"], ans: 2, explanation: "The math module provides standard math functions." },
+          { q: "6. How do you create a function in Python?", img: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80", options: ["function myFunc():", "def myFunc():", "create myFunc():", "func myFunc():"], ans: 1, explanation: "Functions are declared using the def keyword." },
+          { q: "7. Which tool is used to manage virtual environments in Python?", img: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=800&q=80", options: ["venv", "npm", "pipenv", "both venv and pipenv"], ans: 3, explanation: "Both venv and pipenv manage Python virtual environments." },
+          { q: "8. What statement is used to stop a loop prematurely in Python?", img: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=800&q=80", options: ["exit", "stop", "break", "return"], ans: 2, explanation: "The break statement terminates loops." },
+          { q: "9. What is the output of bool('False') in Python?", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80", options: ["False", "True", "None", "Error"], ans: 1, explanation: "Any non-empty string evaluates to True." },
+          { q: "10. Which popular Python library is used for high-performance data manipulation?", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80", options: ["Django", "Flask", "Pandas", "Requests"], ans: 2, explanation: "Pandas provides essential data structures and analysis tools." }
+        ]
+      },
+      general: {
+        title: "General Knowledge & World Wonders",
+        duration: 8,
+        img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80",
+        questions: [
+          { q: "1. In which country is this ancient wonder located?", img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80", options: ["India", "Egypt", "Turkey", "Italy"], ans: 0, explanation: "The Taj Mahal is located in Agra, India." },
+          { q: "2. What is the capital city of France?", img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80", options: ["London", "Berlin", "Paris", "Rome"], ans: 2, explanation: "Paris is the capital of France." },
+          { q: "3. Which planet in our solar system is known as the 'Red Planet'?", img: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=800&q=80", options: ["Venus", "Jupiter", "Saturn", "Mars"], ans: 3, explanation: "Mars is called the Red Planet." },
+          { q: "4. Which ocean is the largest on Earth?", img: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=800&q=80", options: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"], ans: 2, explanation: "The Pacific Ocean is the largest ocean." },
+          { q: "5. What element does 'O' represent on the periodic table?", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80", options: ["Osmium", "Oxygen", "Gold", "Silver"], ans: 1, explanation: "O is the chemical symbol for Oxygen." },
+          { q: "6. Which is the tallest mammal on Earth?", img: "https://images.unsplash.com/photo-1547721064-da6cfb341d50?auto=format&fit=crop&w=800&q=80", options: ["Elephant", "Giraffe", "Blue Whale", "Hippo"], ans: 1, explanation: "Giraffes are the tallest terrestrial mammals." },
+          { q: "7. In what country can you find the Colosseum?", img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80", options: ["Greece", "Italy", "Spain", "France"], ans: 1, explanation: "The Colosseum is located in Rome, Italy." },
+          { q: "8. What is the hardest natural substance on Earth?", img: "https://images.unsplash.com/photo-1600003014755-ba31aa59c4b6?auto=format&fit=crop&w=800&q=80", options: ["Gold", "Iron", "Diamond", "Platinum"], ans: 2, explanation: "Diamond is the hardest natural substance." },
+          { q: "9. How many continents are there on Earth?", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80", options: ["5", "6", "7", "8"], ans: 2, explanation: "There are 7 recognized continents." },
+          { q: "10. What force keeps us on the ground?", img: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=800&q=80", options: ["Friction", "Gravity", "Magnetism", "Tension"], ans: 1, explanation: "Gravity pulls objects toward Earth's center." }
+        ]
+      }
+    };
+
+    const globalLeaderboardData = [
+      { name: "Alex Johnson", category: "webdev", score: 100 },
+      { name: "Sam Taylor", category: "python", score: 90 },
+      { name: "Chris Evan", category: "general", score: 80 }
+    ];
+
+    let activeTopicKey = 'webdev';
+    let currentQuestions = [];
+    let currentQ = 0;
+    let userAnswers = {};
+
+    function populateQuizGrid() {
+      const grid = document.getElementById('quizGrid');
+      grid.innerHTML = '';
+
+      Object.keys(quizDatabase).forEach(key => {
+        const quiz = quizDatabase[key];
+        grid.innerHTML += `
+          <div class="quiz-card">
+            <div>
+              <img src="${quiz.img}" alt="${quiz.title}" class="quiz-card-img" />
+              <h4 style="font-size: 1.05rem; font-weight: 700; margin-top: 0.75rem;">${quiz.title}</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                ${quiz.questions.length} Questions • ${quiz.duration} Mins Limit
+              </p>
+            </div>
+            <button class="btn btn-full" onclick="openQuizDetails('${key}')">View Details & Start</button>
+          </div>
+        `;
+      });
+    }
+
+    function openQuizDetails(key) {
+      activeTopicKey = key;
+      const quiz = quizDatabase[key];
+      document.getElementById('detailTitle').innerText = quiz.title;
+      document.getElementById('detailImg').src = quiz.img;
+      document.getElementById('detailCount').innerText = quiz.questions.length;
+      document.getElementById('detailDuration').innerText = quiz.duration;
+
+      document.getElementById('studentDashboard').classList.add('hidden');
+      document.getElementById('quizDetailsSection').classList.remove('hidden');
+    }
+
+    function cancelQuizDetails() {
+      document.getElementById('quizDetailsSection').classList.add('hidden');
+      document.getElementById('studentDashboard').classList.remove('hidden');
+    }
+
+    function confirmStartQuiz() {
+      document.getElementById('quizDetailsSection').classList.add('hidden');
+      document.getElementById('quizEngineSection').classList.remove('hidden');
+
+      const quiz = quizDatabase[activeTopicKey];
+      currentQuestions = quiz.questions;
+      document.getElementById('activeQuizTitle').innerText = quiz.title;
+      document.getElementById('totalQCount').innerText = currentQuestions.length;
+
+      currentQ = 0;
+      userAnswers = {};
+      loadQuestion();
+      startTimer(quiz.duration * 60);
+    }
+
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode;
+      document.getElementById('authTitle').innerText = isRegisterMode ? 'Create Account' : 'Sign In';
+      document.getElementById('nameGroup').classList.toggle('hidden', !isRegisterMode);
+      document.getElementById('authSubmitBtn').innerText = isRegisterMode ? 'Register' : 'Sign In';
+      document.getElementById('authToggleText').innerText = isRegisterMode ? 'Already registered?' : "Need an account?";
+      document.getElementById('authToggleLink').innerText = isRegisterMode ? 'Log in here' : 'Register here';
+    }
+
+    async function handleAuth() {
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+      const role = document.getElementById('authRole').value;
+      const name = document.getElementById('authName').value;
+      const status = document.getElementById('authStatus');
+
+      try {
+        const endpoint = isRegisterMode ? '/auth/register' : '/auth/login';
+        const payload = isRegisterMode ? { name, email, password, role } : { email, password };
+
+        const response = await fetch(`${API_URL}${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', data.token || 'demo_token');
+          renderSession(data.user || { name: name || 'User', role });
+        } else {
+          status.style.color = 'var(--danger)';
+          status.innerText = data.message || 'Authentication failed.';
+        }
+      } catch (err) {
+        status.style.color = 'var(--warning)';
+        status.innerText = 'Backend offline. Loaded preview session...';
+        setTimeout(() => renderSession({ name: name || email.split('@')[0], role }), 800);
+      }
+    }
+
+    function renderSession(user) {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appNav').classList.remove('hidden');
+      document.getElementById('userNameDisplay').innerText = user.name;
+      document.getElementById('userRoleBadge').innerText = user.role;
+
+      if (user.role === 'admin') {
+        document.getElementById('adminDashboard').classList.remove('hidden');
+      } else {
+        document.getElementById('studentDashboard').classList.remove('hidden');
+        populateQuizGrid();
+        renderLeaderboard();
+      }
+    }
+
+    function loadQuestion() {
+      const qData = currentQuestions[currentQ];
+      document.getElementById('currentQIndex').innerText = currentQ + 1;
+      document.getElementById('questionText').innerText = qData.q;
+      document.getElementById('questionImage').src = qData.img;
+      
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+
+      qData.options.forEach((opt, idx) => {
+        const isChecked = userAnswers[currentQ] === idx ? 'checked' : '';
+        container.innerHTML += `
+          <label class="option-item">
+            <input type="radio" name="quizOpt" value="${idx}" ${isChecked} onchange="saveAnswer(${idx})" />
+            <span>${opt}</span>
+          </label>
+        `;
+      });
+
+      document.getElementById('nextBtn').innerText = (currentQ === currentQuestions.length - 1) ? 'Submit Assessment' : 'Next Question';
+    }
+
+    function saveAnswer(optionIndex) {
+      userAnswers[currentQ] = optionIndex;
+    }
+
+    function nextQuestion() {
+      if (currentQ < currentQuestions.length - 1) {
+        currentQ++;
+        loadQuestion();
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQ > 0) {
+        currentQ--;
+        loadQuestion();
+      }
+    }
+
+    function startTimer(seconds) {
+      let timeRemaining = seconds;
+      const timerDisplay = document.getElementById('timerDisplay');
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          alert('Time limit reached! Submitting automatically.');
+          submitQuiz();
+        }
+        timeRemaining--;
+      }, 1000);
+    }
+
+    function submitQuiz() {
+      clearInterval(timerInterval);
+      document.getElementById('quizEngineSection').classList.add('hidden');
+      document.getElementById('resultsSection').classList.remove('hidden');
+
+      let correctCount = 0;
+      const reviewContainer = document.getElementById('reviewContainer');
+      reviewContainer.innerHTML = '';
+
+      currentQuestions.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.ans;
+        if (isCorrect) correctCount++;
+
+        reviewContainer.innerHTML += `
+          <div class="review-box ${isCorrect ? 'review-correct' : 'review-incorrect'}">
+            <p style="font-weight: 700; margin-bottom: 0.3rem;">Q${idx + 1}: ${q.q}</p>
+            <p style="font-size: 0.9rem;">Your Answer: <strong>${userAns !== undefined ? q.options[userAns] : 'Not Answered'}</strong></p>
+            <p style="font-size: 0.9rem; color: var(--success);">Correct Answer: <strong>${q.options[q.ans]}</strong></p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"><em>Explanation: ${q.explanation}</em></p>
+          </div>
+        `;
+      });
+
+      const scorePct = Math.round((correctCount / currentQuestions.length) * 100);
+      const isPassed = scorePct >= 60;
+      document.getElementById('finalScoreText').innerText = `${scorePct}%`;
+      
+      const passBadge = document.getElementById('passFailBadge');
+      passBadge.innerText = isPassed ? 'PASS' : 'FAIL';
+      passBadge.style.color = isPassed ? 'var(--success)' : 'var(--danger)';
+
+      attemptLogs.push({
+        date: new Date().toLocaleDateString(),
+        category: quizDatabase[activeTopicKey].title,
+        score: `${scorePct}%`,
+        status: isPassed ? 'PASS' : 'FAIL'
+      });
+
+      updateStudentDashboardStats();
+    }
+
+    function updateStudentDashboardStats() {
+      document.getElementById('statCompleted').innerText = attemptLogs.length;
+      
+      if (attemptLogs.length > 0) {
+        const totalScore = attemptLogs.reduce((acc, curr) => acc + parseInt(curr.score), 0);
+        const avg = Math.round(totalScore / attemptLogs.length);
+        const passedCount = attemptLogs.filter(a => a.status === 'PASS').length;
+
+        document.getElementById('statAvg').innerText = `${avg}%`;
+        document.getElementById('statPassRate').innerText = `${Math.round((passedCount / attemptLogs.length) * 100)}%`;
+
+        const historyBody = document.getElementById('attemptHistoryBody');
+        historyBody.innerHTML = '';
+        attemptLogs.forEach(attempt => {
+          historyBody.innerHTML += `
+            <tr>
+              <td>${attempt.date}</td>
+              <td>${attempt.category}</td>
+              <td><strong>${attempt.score}</strong></td>
+              <td style="color: ${attempt.status === 'PASS' ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${attempt.status}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    function renderLeaderboard() {
+      const filter = document.getElementById('leaderboardCategoryFilter').value;
+      const body = document.getElementById('leaderboardBody');
+      body.innerHTML = '';
+
+      const filtered = filter === 'overall' 
+        ? globalLeaderboardData 
+        : globalLeaderboardData.filter(item => item.category === filter);
+
+      if (filtered.length === 0) {
+        body.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No entries found for this category.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach((item, index) => {
+        const rankMedal = index === 0 ? '🥇 #1' : index === 1 ? '🥈 #2' : '🥉 #3';
+        const categoryLabel = quizDatabase[item.category] ? quizDatabase[item.category].title : 'Overall';
+        body.innerHTML += `
+          <tr>
+            <td>${rankMedal}</td>
+            <td>${item.name}</td>
+            <td>${categoryLabel}</td>
+            <td><strong>${item.score}%</strong></td>
+          </tr>
+        `;
+      });
+    }
+
+    function returnToDashboard() {
+      document.getElementById('resultsSection').classList.add('hidden');
+      document.getElementById('studentDashboard').classList.remove('hidden');
+    }
+
+    function handleLogout() {
+      localStorage.clear();
+      location.reload();
+    }
+  </script>
+</body>
+</html>
