@@ -29,7 +29,7 @@ npm start
 ```[cite: 11]
 
 ### 2. Setup Frontend
-```poweshell
+```powershell
 cd frontend
 npm install
 npm run dev
